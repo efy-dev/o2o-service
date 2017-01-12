@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta charset="UTF-8">
+    <title>店铺详情</title>
+    <link rel="stylesheet" href="guide/css/layouts.css">
+</head>
+<body class="detail">
+
+<div class="header" dot-template="header"></div>
+<!--//End--header-->
+
+<div dot-template="tenant-base"></div>
+<!--//End-->
+
+
+<div class="tenant">
+    <div class="filter">
+        <div class="tab"><span>价格</span><span>品类</span></div>
+        <div class="content"
+             style="width: 100%;position: absolute;top:54px;left: 0;background:#fff;border:0;z-index:10;">
+            <ul class="price" style="display: none;">
+                <li min="0" max="10000000000000000">全部</li>
+                <li min="0" max="200">0元-200元</li>
+                <li min="200" max="1000">200元 — 1000元</li>
+                <li min="1000" max="5000">1000元 — 5000元</li>
+                <li min="5000" max="10000000000000000">5000元以上</li>
+            </ul>
+            <ul class="category" dot-template="tenant-category" style="display: none;">
+
+            </ul>
+        </div>
+    </div>
+    <div class="product-list" dot-template="tenant-product-list"></div>
+</div>
+
+
+<div class="horizontal" style="margin-top: 0;margin-bottom:24px">
+    <div class="title"><h2>店内实景</h2></div>
+    <div class="swiper-container" style="font-size:30px" dot-template="tenant-panel-list">
+
+    </div>
+</div>
+<div class="footer"></div>
+
+<script type="text/x-dot-template" id="tenant-base">
+    <div class="focus">
+        <img src="{{=it.pictureUrl}}@!o2o-home-banner" style="width: 100%" alt="">
+    </div>
+
+    {{ if(it.audio!=null) { }}
+    <div class="audio audio-box" id="audio">
+        <a data-type="audio-button">
+            <span class="play active" data-type="audio-icon"><i class="icon"></i></span>
+        </a>
+        <span class="title">
+        <p>{{=it.name}}</p>
+        <p>{{=it.name}}的语音介绍</p>
+        </span>
+        <span class="time"></span>
+        <audio id="media" data-type="audio-body" src="{{=it.audio}}" autoplay="autoplay"></audio>
+    </div>
+    {{ } }}
+    <!--//End audio-->
+
+    <div class="info">
+        <div class="base">
+            <div class="title text_hidden">{{=it.name}}</div>
+            {{ if(it.tenantProjectList.length>0){ }}
+            <div class="subtitle text_hidden">分类：{{=it.tenantProjectList[0].project.name }}
+            </div>
+            {{ } }}
+            <!--<div class="subtitle text_hidden">主营项目：苏绣手工艺术品</div>-->
+            <div class="subtitle text_hidden">地址：<a style="color: #333;"
+                                                    onclick="openLocation({{=it.latitude}},{{=it.longitude}},'{{=it.name}}',14,'')"><span>{{=it.address}}<i
+                    class="icon icon_map"></i></span></a></div>
+        </div>
+        <!--//End base-->
+        <div class="praise" dot-template="tenant-praise"></div>
+        <!--//End praise-->
+        {{
+        if(it.tenantMasterList!=null &&it.tenantMasterList.length > 0) {
+        var master = it.tenantMasterList[0];
+        if(master.master!=null){
+        }}
+        <div class="master">
+            <a href="http://minglu.efeiyi.com/minglu/master/{{=master.master.id}}">
+                <div class="img"><img src="http://tenant.efeiyi.com/{{=master.master.favicon}}" alt=""></div>
+                <div class="text">
+                    <p>{{=master.master.fullName}}</p>
+                    <p>{{=master.master.title!=null?master.master.title:"大师简介"}}</p>
+                </div>
+                <i class="angle right"></i>
+            </a>
+        </div>
+
+        {{ } }}
+        {{ } }}
+        <!--//End master-->
+    </div>
+</script>
+
+<script type="text/x-dot-template" id="tenant-praise">
+
+    {{ if(PageVariable.currentUser!=null && PageVariable.currentUser.id!=null && PageVariable.currentUser.isPraised==true){ }}
+    <a class="btn" onclick="praiseTenant(PageVariable.tenant.id,1)"><i class="icon icon_heart_active"></i><span>{{=it.length}}</span></a>
+    {{ }else if(PageVariable.currentUser!=null && PageVariable.currentUser.id!=null){ }}
+    <a class="btn" onclick="praiseTenant(PageVariable.tenant.id,0)"><i
+            class="icon icon_heart"></i><span>{{=it.length}}</span></a>
+    {{ }else { }}
+    <a class="btn"><i class="icon icon_heart"></i><span>{{=it.length}}</span></a>
+    {{ } }}
+    <ul class="ulist">
+        {{ for(var i = 0 ; i < it.length ; i++){ }}
+        {{
+        var user = it[i].user;
+        if(user!=null && user.pictureUrl!=null){
+        }}
+        <li><img src="{{=it[i].user.pictureUrl}}" alt=""></li>
+        {{ } else{ }}
+        <li><img src="" alt=""></li>
+        {{ } }}
+        {{ } }}
+    </ul>
+
+</script>
+
+<script type="text/x-dot-template" id="tenant-product-list">
+    <ul>
+        {{
+        for (var i = 0 ; i < it.length ; i++) {
+        var product = it[i];
+        }}
+        {{ if(product.productModel_url != '' && product.price!=null ){ }}
+        <li>
+            <a href="product_details.html?productId={{=product.id}}&title={{=product.product.name}}">
+                <img src="{{=product.productModel_url}}@!o2o-tenant-list" alt="">
+                <p class="text">{{=product.product.name}}</p>
+                <p class="price">¥<span>{{=product.price}}</span></p>
+            </a>
+        </li>
+        {{ } }}
+        {{ } }}
+    </ul>
+    <a class="more" onclick="loadMore()">加载更多</a>
+</script>
+
+<script type="text/x-dot-template" id="tenant-panel-list">
+    <div class="swiper-wrapper">
+        {{ for( var i=0; i < it.length; i++ ){ }}
+        <div class="swiper-slide">
+            <a href="panel_details.html?panelId={{=it[i].id}}&title={{=it[i].name}}">
+                <img src="{{=it[i].imageList[0].image.src}}@!o2o-tenant-list" alt="">
+            </a>
+        </div>
+        {{ } }}
+    </div>
+</script>
+
+<script type="text/x-dot-template" id="tenant-category">
+    <li class='category' categoryId="">全部</li>
+    {{ for( var i=0; i < it.length; i++ ){ }}
+
+    <!--<li onclick="filterCategory('{{=it[i].id}}')">{{=it[i].name}}</li>-->
+    <li class='category' categoryId="{{=it[i].id}}">{{=it[i].name}}</li>
+    {{ } }}
+</script>
+
+
+<script src="common/js/common.js"></script>
+<script src="common/js/util.js"></script>
+<script src="common/js/weixin.js"></script>
+<script src="guide/js/controller.js"></script>
+<script src="guide/js/model.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<!--//End-->
+
+<script>
+
+    $().ready(function () {
+        initPage();
+    });
+
+    function initPage() {
+        var requestParam = getRequestParameter();
+        if (typeof requestParam.title == "undefined") {
+            requestParam.title = "";
+        }
+        PageVariable.tenantId = requestParam.tenantId;
+        PageVariable.title = decodeURI(requestParam.title);
+        $("title").html(PageVariable.title);
+        $("[dot-template=header]").html(renderHeader(PageVariable));
+
+        getTenantById(PageVariable.tenantId, function () {
+            wx_share_title = PageVariable.tenant.name;
+            wx_share_des = PageVariable.tenant.content;  //分享描述
+            var redirect = "http://www.efeiyi.com/qrcode/redirect/tenant/" + PageVariable.tenantId;
+            var redirect_uri = "http://mall.efeiyi.com/wx/login.do?redirect=" + redirect;
+            wx_share_link = "https://open.weixin.qq.com/connect/oauth2/authorize?" +
+                "appid=wx7f6aa253b75466dd" +
+                "&redirect_uri=" +
+                encodeURI(redirect_uri) +
+
+                "&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect";
+            wx_share_imgUrl = PageVariable.tenant.pictureUrl + "@!o2o-audio-list";
+            renderTemplate(PageVariable.template.tenantBase, PageVariable.tenant);
+            getTenantPraiseListByTenant(PageVariable.tenantId, function () {
+                if (PageVariable.currentUser != null) {
+                    PageVariable.currentUser.isPraised = false;
+                    for (var i = 0; i < PageVariable.tenantPraiseList.length; i++) {
+                        var praise = PageVariable.tenantPraiseList[i];
+                        if (praise.user.id == PageVariable.currentUser.id) {
+                            PageVariable.currentUser.isPraised = true;
+                            break;
+                        } else {
+                            PageVariable.currentUser.isPraised = false;
+                        }
+                    }
+                }
+
+
+                renderTemplate(PageVariable.template.tenantPraise, PageVariable.tenantPraiseList);
+            });
+            $(".audio-box").each(function () {
+                PageVariable.audioList.push(new Audio($(this).attr("id")));
+                wx.ready(function () {
+                    PageVariable.setCurrentAudio(PageVariable.audioList[0]);
+                })
+            });
+        });
+
+        PageVariable.requestModel["product.tenant.id"] = PageVariable.tenantId;
+        searchProductModelsByTenantGroup(PageVariable.requestModel, 6, 0, function () {
+            renderTemplate(PageVariable.template.tenantProductList, PageVariable.productModelList);
+        })
+
+        getImageTextListByTenant(PageVariable.tenantId, function () {
+            renderTemplate(PageVariable.template.tenantPanelList, PageVariable.imageTextList);
+        })
+
+
+        //品类
+        getTenantCategory(PageVariable.tenantId, function () {
+            renderTemplate(PageVariable.template.tenantCategory, PageVariable.tenantCategory);
+        });
+        $('input.name').on('blur', function () {
+            //  window.location.href = "localhost:63343/o2o-application/app/search.html?name=" + $(this).val();
+            window.location.href = "search.html?name=" + $(this).val();
+        });
+        filterTenant();
+    }
+
+
+    function praiseTenant(tenantId, delFlag) {
+        saveTenantPraise(tenantId, delFlag, function () {
+            getTenantPraiseListByTenant(PageVariable.tenantId, function () {
+                if (PageVariable.currentUser != null) {
+                    PageVariable.currentUser.isPraised = false;
+                    for (var i = 0; i < PageVariable.tenantPraiseList.length; i++) {
+                        var praise = PageVariable.tenantPraiseList[i];
+                        if (praise.user.id == PageVariable.currentUser.id) {
+                            PageVariable.currentUser.isPraised = true;
+                            break;
+                        } else {
+                            PageVariable.currentUser.isPraised = false;
+                        }
+                    }
+                }
+                renderTemplate(PageVariable.template.tenantPraise, PageVariable.tenantPraiseList);
+            });
+        })
+    }
+    //价格筛选
+    var page = 1;
+    function filterPrice(min, max) {
+        PageVariable.requestModel["startPrice"] = min;
+        PageVariable.requestModel["endPrice"] = max;
+        searchProductModelsByTenantGroup(PageVariable.requestModel, 6, 0, function () {
+            renderTemplate(PageVariable.template.tenantProductList, PageVariable.productModelList);
+        })
+        page = 1;
+    }
+
+    function filterCategory(id) {
+        if (id == "") {
+            delete PageVariable.requestModel["product.tenantGroup.id"];
+        } else {
+            PageVariable.requestModel["product.tenantGroup.id"] = id;
+        }
+        searchProductModelsByTenantGroup(PageVariable.requestModel, 6, 0, function () {
+            renderTemplate(PageVariable.template.tenantProductList, PageVariable.productModelList);
+        });
+        page = 1;
+    }
+    function loadMore() {
+        page = page + 1;
+        searchProductModelsByTenantGroup(PageVariable.requestModel, 6 * page, 0, function () {
+            renderTemplate(PageVariable.template.tenantProductList, PageVariable.productModelList);
+        });
+    }
+
+    //筛选
+    function filterTenant() {
+        //选择按钮
+        var $filter = $('.filter');
+        var $span = $filter.find('.tab span');
+        var $ul = $filter.find('.content ul');
+        var $tab = $filter.find(".tab");
+
+        $tab.on('touchend', "span", function () {
+            var index = $(this).index();
+            $(this).toggleClass('active').siblings('span').removeClass('active');
+            $ul.eq(index).stop(true).slideToggle(200).siblings('ul').slideUp(0);
+            return false;
+        });
+
+        //下拉框：筛选条件
+        $ul.on('touchend', "li", function () {
+            $ul.slideUp(200);
+            $span.removeClass('active');
+            $(this).addClass('active').siblings('li').removeClass('active');
+            if ($(this).attr("class") == "active") {
+                filterPrice($(this).attr("min"), $(this).attr("max"));
+            }
+            if ($(this).attr("class") == "category active") {
+                filterCategory($(this).attr("categoryId"));
+            }
+            return false;
+        });
+    }
+
+
+</script>
+
+
+</body>
+</html>

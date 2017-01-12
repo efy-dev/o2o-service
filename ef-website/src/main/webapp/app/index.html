@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta charset="UTF-8">
+    <title>前门华韵</title>
+    <link rel="stylesheet" href="guide/css/layouts.css">
+
+
+    <style>
+        .swiper-container {
+            padding: 0 16px
+        }
+
+        .horizontal .swiper-slide {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="header" dot-template="header"></div>
+<!--//End--header-->
+
+
+<div class="image">
+    <a href="http://www.efeiyi.com/app/tenant_details.html?tenantId=iugd2v0v7mbwxumv&title=%E5%89%8D%E9%97%A8%E5%8D%8E%E9%9F%B5%E9%9D%9E%E9%81%97%E4%BD%93%E9%AA%8C%E4%B8%AD%E5%BF%83"><img
+            src="uploads/668284120090350147.jpg"/></a>
+</div>
+<!--//End--focus-->
+
+<div class="menu">
+    <a href="http://www.efeiyi.com/app/audio_guide.html?title=语音导览"><i class="icon icon-audio"></i><span>语音导览</span></a>
+    <a href=""><i class="icon icon-tour"></i><span>旅游攻略</span></a>
+    <a href="http://www.efeiyi.com/app/product_list.html?title=限时折扣"><i
+            class="icon icon-limit"></i><span>限时折扣</span></a>
+</div>
+<!--//End--menu-->
+
+<div class="promimg">
+    <a href="" title=""><img alt="" src="uploads/ad1.jpg"></a>
+</div>
+<!--//End--ad-->
+
+<div class="horizontal" style="margin-bottom:40px">
+    <div class="title"><h1>店铺</h1><a class="more" href="tenant_list.html?title=店铺列表" title="更多">更多&gt;</a></div>
+    <div class="swiper-container" dot-template="home-recommend-list">
+
+        <!--<div class="swiper-slide">-->
+        <!--<a href="{{=it[i].redirect}}">-->
+        <!--<img src="uploads/447530959026349984.jpg"/>-->
+        <!--<div class="base">-->
+        <!--<dl class="txt" style="padding-right: 0px;">-->
+        <!--<dt>非遗体验中心</dt>-->
+        <!--<dd>开业庆典，全场8折</dd>-->
+        <!--</dl>-->
+        <!--</div>-->
+        <!--</a>`-->
+        <!--</div>-->
+
+    </div>
+</div>
+<!--//End--product-->
+
+
+<div class="footer">
+</div>
+
+<script type="text/x-dot-template" id="home-recommend-list">
+    {{ for(var i = 0 ; i < it.length ;i++){ }}
+    {{ if(it[i].image!=null){ }}
+    <div class="swiper-wrapper">
+        <div class="swiper-slide">
+            <a href="{{=it[i].redirect}}">
+                <img src="{{=it[i].image.src}}@!o2o-tenant-list" alt="">
+                <div class="base">
+                    <dl class="txt" style="padding-right: 0px;">
+                        <dt>{{=it[i].title}}</dt>
+                        <dd>{{=it[i].shortText}}</dd>
+                    </dl>
+                </div>
+            </a>
+        </div>
+    </div>
+    <!--//End 3-->
+    {{ } }}
+    {{ } }}
+</script>
+
+
+<script src="common/js/common.js"></script>
+<script src="common/js/util.js"></script>
+<script src="common/js/weixin.js"></script>
+<script src="guide/js/controller.js"></script>
+<script src="guide/js/model.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<!--//End-->
+
+
+<script>
+    wx_share_title = "前门华韵"; //分享标题
+    wx_share_des = "带上耳机，轻松领略中国传统文化与传承";  //分享描述
+    var redirect = "http://www.efeiyi.com/app/index.html";
+    var redirect_uri = "http://mall.efeiyi.com/wx/login.do?redirect=" + redirect;
+    wx_share_link = "https://open.weixin.qq.com/connect/oauth2/authorize?" +
+        "appid=wx7f6aa253b75466dd" +
+        "&redirect_uri=" +
+        encodeURIComponent(redirect_uri) +
+        "&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect";
+
+    $().ready(function () {
+        initPage();
+    });
+
+    function initPage() {
+        $("[dot-template=header]").html(renderHomeHeader());
+        getRecommendList({}, 5, 0, function () {
+            renderTemplate(PageVariable.template.homeRecommendList, PageVariable.recommendList);
+        });
+      /*  $('input.name').on('blur', function () {
+            //  window.location.href = "localhost:63343/o2o-application/app/search.html?name=" + $(this).val();
+            window.location.href = "search.html?name=" + $(this).val();
+        });*/
+    }
+
+
+</script>
+
+
+</body>
+</html>

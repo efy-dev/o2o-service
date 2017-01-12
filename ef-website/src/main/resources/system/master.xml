@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<module name="master" label="系统-传承人" version="" package="com.efeiyi.ec.master" path="">
+
+    <entities>
+        <entity name="masterIntroduction" label="简介"  model="com.efeiyi.ec.master.model.MasterIntroduction">
+            <does>
+                <do name="listMasterIntroduction" access="" label="简介列表">
+                    <query name="default" label="默认" type="auto">
+                        <condition name="master.id" defaultValue="1" operation="eq"/>
+                        <condition name="status" defaultValue="0" operation="ne"/>
+                        <condition name="type" defaultValue="1" operation="eq"/>
+                    </query>
+                </do>
+            </does>
+        </entity>
+
+    </entities>
+
+
+</module>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean id="securityStrategy" class="com.efeiyi.ec.security.auth.IsAuthenticatedSecurityStrategy">
+        <constructor-arg name="userDetailsService" ref="userServiceImpl"/>
+        <constructor-arg name="loginUrl" value="/login"/>
+        <constructor-arg name="urlList">
+            <list>
+                <value>/order/**</value>
+                <value>/app/order**</value>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="userServiceImpl" class="com.efeiyi.ec.website.organization.service.impl.UserServiceImpl"/>
+
+</beans>
